@@ -6,7 +6,7 @@ from loguru import logger
 
 
 
-def cleaning_data(df_brute : pd.DataFrame):
+def cleaning_data(df_brute : pd.DataFrame, file : str):
     """Cette fonction se charge du néttoyage des données brutes"""
     logger.info('Début du néttoyage des données brutes')
     df_resto = df_brute.copy()
@@ -55,81 +55,16 @@ def cleaning_data(df_brute : pd.DataFrame):
         .replace("", "0", regex=False)
         .astype(int)
     ) 
-    df_resto['discount'] = round(df_resto['discount'] /100, 2)
 
 
     logger.info('Néttoyage des données brutes éffectue avec succée')
+
+    df_resto.to_csv(file, index=False)
+    logger.info(f'Données néttoyés sont sauvegardés dans {file.name}')
     return df_resto
 
 
 """
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-df_restaurant = (
-    df_nettoye
-    .groupby('restaurant')
-    .agg(
-        {
-            'total_amount' : 'sum',
-            'quantity' : 'sum',
-            'rating' : 'mean'
-        }
-    )
-    .round(2)
-    .sort_values(by=('total_amount'), ascending=False)
-    .reset_index()
-)
-
-
-
-df_plats = (
-    df_resto
-    .groupby('menu_item')
-    .agg(
-        {
-            'quantity' : 'sum',
-            'unit_price' : 'first'
-        }
-    )
-    .sort_values(by='quantity', ascending=False)
-    .reset_index() 
-    )
-
-
-
-df_plats['total_amount'] = round((df_plats['unit_price'] * df_plats['quantity']), 2)
-
-
-
-df_category = (
-    df_resto.groupby('category')
-    .agg(
-        {
-           'quantity' : 'sum',
-           'unit_price' : 'mean'
-        }
-    )
-    .reset_index() 
-)
-
-
-df_category['Impact_CA_%'] = round(((df_category['quantity'] * df_category['unit_price']) / df_plats['total_amount'].sum()) * 100, 2)
-
-
-
 
 
 print()
