@@ -1,0 +1,10 @@
+
+
+
+data/processed/*.csv
+output/*.xlsx
+logs/*.log
+venv/
+.env
+*.pyc
+__pycache__/
