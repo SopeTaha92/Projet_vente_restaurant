@@ -6,6 +6,8 @@ from datetime import datetime
 
 
 TODAY = datetime.now().strftime('%d-%m-Y_%H-%M')
+MAX_RETRIES = 3
+DELAY = 1
 
 
 DIR_LOGS = Path('Logs')
