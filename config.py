@@ -35,6 +35,37 @@ COULEURS_EXCEL= {
     'junior': '#FFD966'    # Jaune
 }
 
+EXCEL_FORMATTING = {
+
+    'discount' : {
+        'red_value' : 5,
+        'min_orange' : 6,
+        'max_orange' : 15,
+        'green_value' : 15
+    },
+
+    'discount_amount' : {
+        'red_value' : 0.5,
+        'min_orange' : 0.5,
+        'max_orange' : 2.5,
+        'green_value' : 2.5
+    },
+
+    'total_amount' : {
+        'red_value' : 15,
+        'min_orange' : 15,
+        'max_orange' : 25,
+        'green_value' : 25
+    },
+
+    'total_amount_pl' : {
+        'red_value' : 15,
+        'min_orange' : 15,
+        'max_orange' : 25,
+        'green_value' : 25
+    }
+}
+
 
 
 

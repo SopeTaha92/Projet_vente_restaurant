@@ -29,7 +29,7 @@ Onglets = {
     "Données aux Complets" : complete_data,
     "Données Par Restaurant" : analyse_restaurant,
     "Données Par Plats" : analyse_plats,
-    "Données Par Catégories" : analyse_categorie
+    "Données Par Catégories" : analyse_categorie 
 }
 
 

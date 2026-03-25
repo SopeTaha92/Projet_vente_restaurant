@@ -15,8 +15,9 @@ def analysis_by_restaurant(df_nettoye : pd.DataFrame):
             {
                 'menu_item' : 'count',
                 'quantity' : 'sum',
-                'total_amount' : 'sum',
+                'total_price' : 'sum',
                 'discount' : 'mean',
+                'total_amount' : 'sum',
                 'rating' : 'mean'
             }
         )

@@ -9,10 +9,9 @@ def add_features(df_nettoye : pd.DataFrame):
     """Cette fonction se charge d'ajouter des nouvelles colonnes à travers les divers opérations qui seront éffectués"""
     logger.info('Début des features')
 
-    df_nettoye['discount_amount'] = round(df_nettoye['discount'] /100, 2).astype(float)
-
-
     df_nettoye['total_price'] = round(df_nettoye['unit_price'] * df_nettoye['quantity'], 2).astype(float)
+
+    df_nettoye['discount_amount'] = round((df_nettoye['total_price'] * df_nettoye['discount']) / 100, 2).astype(float)
 
     df_nettoye['total_amount'] = round((df_nettoye['total_price'] - df_nettoye['discount_amount']), 2).astype(float)
 
