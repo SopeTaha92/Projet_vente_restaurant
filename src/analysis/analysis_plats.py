@@ -31,28 +31,3 @@ def analysis_by_plat(df_nettoye : pd.DataFrame):
     return df_plats
 
 
-"""
-
-
-
-
-
-
-
-df_category = (
-    df_resto.groupby('category')
-    .agg(
-        {
-           'quantity' : 'sum',
-           'unit_price' : 'mean'
-        }
-    )
-    .reset_index() 
-)
-
-
-df_category['Impact_CA_%'] = round(((df_category['quantity'] * df_category['unit_price']) / df_plats['total_amount'].sum()) * 100, 2)
-
-
-
-"""

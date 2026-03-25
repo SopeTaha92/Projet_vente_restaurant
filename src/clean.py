@@ -26,7 +26,7 @@ def cleaning_data(df_brute : pd.DataFrame, file : str):
         format='mixed',# ← "Devine le format pour chaque valeur" avec python 3.11+
         dayfirst=True,# ← "Priorité jour/mois pour l'Europe"
         errors='coerce' # ← "Ne plante pas si échec met Nat
-    )#.dt.strftime("%d-%m-%Y")#Pour changer le format d'affichage de la date par defaut sur python yyyy-mm-dd 
+    ).dt.date#.dt.strftime("%d-%m-%Y")#Pour changer le format d'affichage de la date par defaut sur python yyyy-mm-dd 
     df_resto['order_time'] = pd.to_datetime(df_resto['order_time'], format='%H:%M').dt.time
 
     df_resto['customer_name'] = df_resto['customer_name'].str.title().fillna('Inconnue')
