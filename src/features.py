@@ -5,7 +5,7 @@ import pandas as pd
 from loguru import logger
 
 
-def add_features(df_nettoye : pd.DataFrame):
+def add_features(df_nettoye : pd.DataFrame) -> pd.DataFrame:
     """Cette fonction se charge d'ajouter des nouvelles colonnes à travers les divers opérations qui seront éffectués"""
     logger.info('Début des features')
 

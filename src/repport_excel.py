@@ -5,8 +5,9 @@ import pandas as pd
 from typing import Dict
 from loguru import logger
 import config
+from config import EXCEL_FILE
 
-def reporting_excel(file : str, onglets : Dict[str, pd.DataFrame]):
+def reporting_excel(onglets : Dict[str, pd.DataFrame], file : str = EXCEL_FILE):
     """Cette fonction se charge de la génération du fichier Excel avec ses Multiples feuilles"""
     logger.info(f"Début de la génération du fichier Excel {file.name}")
     with pd.ExcelWriter(file, engine='xlsxwriter') as writer:
@@ -172,3 +173,4 @@ def reporting_excel(file : str, onglets : Dict[str, pd.DataFrame]):
                                 'maximum' : seuil['max_orange'],
                                 'format' : orange_format
                             })
+                            

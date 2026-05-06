@@ -3,7 +3,19 @@
 
 from pathlib import Path
 from datetime import datetime
+from dotenv import dotenv_values
 
+
+env = dotenv_values(".env")
+DB_CONFIG = {
+    'host' : env['DB_HOST'],
+    'port' : int(env['DB_PORT']),
+    'dbname' : env['DB_NAME'],
+    'user' : env['DB_USER'],
+    'password' : env['DB_PASSWORD']
+}
+
+TABLE = env['DB_TABLE']
 
 TODAY = datetime.now().strftime('%d-%m-Y_%H-%M')
 MAX_RETRIES = 3
@@ -14,7 +26,9 @@ DIR_LOGS = Path('Logs')
 DIR_LOGS.mkdir(parents=True, exist_ok=True)
 LOGS_FILE = DIR_LOGS / f'log_vente_restaurant_{TODAY}.log'
 
-BRUTE_DATA_FILE = Path('data/raw/vente_restaurant.csv')
+DIR_BRUTE_DATA_FILE = Path('data/raw')
+DIR_BRUTE_DATA_FILE.mkdir(parents=True, exist_ok=True)
+BRUTE_DATA_FILE = DIR_BRUTE_DATA_FILE / 'vente_restaurant.csv'
 
 DIR_CLEAN_DATA = Path('data/processed')
 DIR_CLEAN_DATA.mkdir(parents=True, exist_ok=True)

@@ -3,9 +3,9 @@
 
 
 from loguru import logger
+from config import LOGS_FILE
 
-
-def logger_file(file : str):
+def logger_file(file : str = LOGS_FILE):
     """Cette fonction se charge de la création des fichiers de logs"""
     logger.remove()
     logger.add(

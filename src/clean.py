@@ -3,10 +3,10 @@
 
 import pandas as pd
 from loguru import logger
+from config import CLEAN_DATA_FILE
 
 
-
-def cleaning_data(df_brute : pd.DataFrame, file : str):
+def cleaning_data(df_brute : pd.DataFrame, file : str = CLEAN_DATA_FILE) -> pd.DataFrame:
     """Cette fonction se charge du néttoyage des données brutes"""
     logger.info('Début du néttoyage des données brutes')
     df_resto = df_brute.copy()
@@ -27,7 +27,8 @@ def cleaning_data(df_brute : pd.DataFrame, file : str):
         dayfirst=True,# ← "Priorité jour/mois pour l'Europe"
         errors='coerce' # ← "Ne plante pas si échec met Nat
     ).dt.date#.dt.strftime("%d-%m-%Y")#Pour changer le format d'affichage de la date par defaut sur python yyyy-mm-dd 
-    df_resto['order_time'] = pd.to_datetime(df_resto['order_time'], format='%H:%M').dt.time
+
+    df_resto['order_time'] = pd.to_datetime(df_resto['order_time'], errors='coerce').dt.time
 
     df_resto['customer_name'] = df_resto['customer_name'].str.title().fillna('Inconnue')
 
