@@ -20,7 +20,7 @@ try:
     analyse_categorie = analysis_by_category(complete_data)
 
 
-    Onglets = {
+    onglets = {
         "Données Brutes" : brute_data,
         "Données aux Complets" : complete_data,
         "Données Par Restaurant" : analyse_restaurant,
@@ -29,7 +29,7 @@ try:
     }
 
 
-    reporting_excel(Onglets) 
+    reporting_excel(onglets) 
 except Exception as e:
     logger.exception(f"Echec du pipeline {e}")
     raise

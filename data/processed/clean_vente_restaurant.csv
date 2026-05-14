@@ -1,0 +1,11 @@
+order_id,restaurant,customer_name,order_date,order_time,menu_item,category,quantity,unit_price,discount,payment_method,rating
+REST-001,Paris Central,Alice Martin,2024-03-15,19:30:00,Pizza Margherita,Pizza,1,12.5,0,CARD,5
+REST-002,Lyon Sud,Bob Dupont,2024-03-16,20:15:00,Burger Classic,Burger,2,15.0,10,CASH,4
+REST-003,Marseille Vieux Port,Charlie Legrand,2024-03-17,21:00:00,Salade Cesar,Salad,1,9.8,5,CARD,4
+REST-004,Lille Centre,Diana Roy,2024-03-18,19:45:00,Pasta Carbonara,Pasta,1,14.2,0,CARD,5
+REST-005,Toulouse Capitole,Evelyn Tremblay,2024-03-19,20:30:00,Steak Frites,Main Course,1,18.5,15,CASH,3
+REST-006,Bordeaux Quais,Frank Klein,2024-03-20,21:15:00,Poisson Du Jour,Fish,1,22.0,0,CARD,5
+REST-007,Nice Promenade,Grace Leroy,2024-03-21,19:00:00,Plat Vegetarien,Vegetarian,2,16.8,10,CARD,4
+REST-008,Strasbourg Grande Ile,Henry Gauthier,2024-03-22,20:45:00,Assiette Fromages,Cheese,1,12.0,5,CASH,4
+REST-009,Montpellier Ecusson,Ivana Petrov,2024-03-23,21:30:00,Dessert Maison,Dessert,3,6.5,20,CARD,5
+REST-010,Rennes Centre,Jack Wilson,2024-03-24,19:15:00,Cafe Gourmand,Dessert,2,8.0,0,CARD,4

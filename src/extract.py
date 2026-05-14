@@ -16,10 +16,11 @@ def extracting_data(max_retries : int = MAX_RETRIES, delay : int = DELAY, file :
         try:
             with psycopg2.connect(**DB_CONFIG) as conn:
                 logger.info('testing connection !')
-                query = (f'SELECT * FROM {TABLE};')
+                query = f'SELECT * FROM {TABLE};'
                 brute_data = pd.read_sql(query, conn)
                 logger.info('Extraction des données brutes éffectués avec succée')
-                brute_data.to_csv(file)
+                brute_data.head(10).to_csv(BRUTE_DATA_FILE, index=False)
+                logger.info(f'Échantillon (10 lignes) sauvegardé : {BRUTE_DATA_FILE}')
                 return brute_data
         except Exception as e:
             if retry < max_retries - 1:

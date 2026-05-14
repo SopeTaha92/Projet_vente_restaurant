@@ -5,9 +5,9 @@ import pandas as pd
 from typing import Dict
 from loguru import logger
 import config
-from config import EXCEL_FILE
+from config import EXCEL_FILE, EXCLUDED_SHEETS, EXCEL_FORMATTING, EXCEL_CHARTS, OPTIONS_DATA_LABELS, OPTIONS_MARKER_LINE
 
-def reporting_excel(onglets : Dict[str, pd.DataFrame], file : str = EXCEL_FILE):
+def reporting_excel(onglets : Dict[str, pd.DataFrame], file : str = EXCEL_FILE, options_labels : str = OPTIONS_DATA_LABELS, options_marker : str = OPTIONS_MARKER_LINE):
     """Cette fonction se charge de la génération du fichier Excel avec ses Multiples feuilles"""
     logger.info(f"Début de la génération du fichier Excel {file.name}")
     with pd.ExcelWriter(file, engine='xlsxwriter') as writer:
@@ -43,48 +43,12 @@ def reporting_excel(onglets : Dict[str, pd.DataFrame], file : str = EXCEL_FILE):
         green_format = workbook.add_format({**base, 'bg_color' : vert})
         orange_format = workbook.add_format({**base, 'bg_color' : orange})
 
-        COLONNE_FORMATER_COMPLET = {
-            'discount' : {
-                'colonne' : 'discount',
-                'seuil_key' : 'discount'
-            },
-
-            'discount_amount' : {
-                'colonne' : 'discount_amount',
-                'seuil_key' : 'discount_amount'
-            },
-
-            'total_amount' : {
-                'colonne' : 'total_amount',
-                'seuil_key' : 'total_amount'
-            }
-        }
-
-        COLONNE_FORMATER_ANALYSIS = {
-
-            'discount' : {
-                'colonne' : 'discount',
-                'seuil_key' : 'discount'
-            },
-
-            'discount_amount' : {
-                'colonne' : 'discount_amount',
-                'seuil_key' : 'discount_amount'
-            },
-
-            'total_amount_pl' : {
-                'colonne' : 'total_amount',
-                'seuil_key' : 'total_amount_pl'
-            }
-        }
-
         for name, data in onglets.items():
             data.to_excel(writer, sheet_name=name, index=False)
             logger.info(f'Créationde la feuille {name}')
             worksheet = writer.sheets[name]
 
-            colonne_traite = ['Données aux Complets', 'Données Par Restaurant', 'Données Par Plats', 'Données Par Catégories']
-            if name in colonne_traite:
+            if name.strip() not in EXCLUDED_SHEETS:
                 worksheet.freeze_panes(1, 0)
                 logger.info(f'Fixation des entêtes pour la feuille {name}')
 
@@ -108,69 +72,135 @@ def reporting_excel(onglets : Dict[str, pd.DataFrame], file : str = EXCEL_FILE):
                     else:
                         worksheet.set_column(i, i, column_width, base_format)
                 logger.info(f"Ajustement automatique de la taille des cellules et de l'ajout des divers foramatage pour la feuille {name}")
+
+
+
+            if name in EXCEL_FORMATTING:
+                logger.info(f"Application du formatage sur la feuille {name}")
+
+                sheet_formatting_config = EXCEL_FORMATTING[name]
+
+                for col_name, seuil in sheet_formatting_config.items():
+                    logger.info(f"Recupération des Clés et Valeurs sur la colonne {col_name} pour la feuille {name}")
+
+                    if col_name in data.columns:
+
+                        col_loc = data.columns.get_loc(col_name)
+
+                        if 'red_value' in seuil:
+                                worksheet.conditional_format(1, col_loc, len(data), col_loc, {
+                                    'type' : 'cell',
+                                    'criteria' : '<=',
+                                    'value' : seuil['red_value'],
+                                    'format' : red_format
+                                })
+
+                        if 'green_value' in seuil:
+                            worksheet.conditional_format(1, col_loc, len(data), col_loc, {
+                                'type' : 'cell',
+                                'criteria' : '>',
+                                'value' : seuil['green_value'],
+                                'format' : green_format
+                            })
+
+                        if 'min_orange' in seuil and 'max_orange' in seuil:
+                            worksheet.conditional_format(1, col_loc, len(data), col_loc, {
+                                'type' : 'cell',
+                                'criteria' : 'between',
+                                'minimum' : seuil['min_orange'],
+                                'maximum' : seuil['max_orange'],
+                                'format' : orange_format
+                            })
+
+
+
+
+            if name in EXCEL_CHARTS:
+                logger.info(f"Mise en place des graphiques sur la feuille {name}")
+
+                sheet_chart_config = EXCEL_CHARTS[name]
+                x_axis_col = data.columns.get_loc(sheet_chart_config['x_axis_col'])
+                main_chart = workbook.add_chart({'type' : sheet_chart_config['type']})
+                for serie in sheet_chart_config['series']:
+                    y_axis_col = data.columns.get_loc(serie['y_axis_col'])
+                    serie_config = {
+                        'name' : serie['name'],
+                        'categories' : [name, 1, x_axis_col, len(data), x_axis_col],
+                        'values' : [name, 1, y_axis_col, len(data), y_axis_col]
+                    }
+                    if 'fill' in serie:
+                        serie_config['fill'] = {'color' : serie['fill']}
+
+                    if 'line_color' in serie:
+                        serie_config['line'] = {'color' : serie['line_color']}
+
+                    if 'border' in serie:
+                        serie_config['border'] = {'color' : serie['border']['color'], 'width' : serie['border']['width']} 
+                    
+                    if 'data_labels' in serie:
+                        dl_config = serie['data_labels']
+                        serie_config['data_labels'] = {k : v for k,v in dl_config.items() if k in options_labels}
+                        if 'font' in dl_config:
+                            serie_config['data_labels']['font'] = {'bold' : True}
+
+                    if serie.get('type') == 'line':
+                        chart_line = workbook.add_chart({'type' : 'line'})
+                        if serie.get('y2_axis'):
+                            serie_config['y2_axis'] = True
+                        if serie.get('marker'):
+                            m_config = serie['marker']
+                            serie_config['marker'] = {k : v for k,v in m_config.items() if k in options_marker}
+                            if 'fill' in m_config:
+                                serie_config['marker']['fill'] = {'color' : m_config['fill']['color']}
+                            if 'border' in m_config:
+                                serie_config['marker']['border'] = {'color' : m_config['border']['color']}
+                        chart_line.add_series(serie_config)
+                        chart_line.set_y2_axis({
+                            'visible': True,
+                            'major_tick_mark': 'none',
+                            'minor_tick_mark': 'none',
+                            'num_font': {'color': '#FFFFFF'},
+                            'line': {'none': True},
+                            'major_gridlines': {'visible': False}
+                        })
+                        main_chart.combine(chart_line)
+                    else:
+                        main_chart.add_series(serie_config)
+
                 
-                if name == 'Données aux Complets':
-                    logger.info(f"Application de la mise en forme conditionnelle sur la feuille {name}")
+                
+                main_chart.set_y_axis({
+                        'visible': True,
+                        'major_tick_mark': 'none',
+                        'minor_tick_mark': 'none',
+                        'num_font': {'color': '#FFFFFF'},
+                        'line': {'none': True},
+                        'major_gridlines': {'visible': False}
+                    })
+                
+                main_chart.set_size({'width': 700, 'height': 500})
+                main_chart.set_legend({'position' : 'none'})
+                main_chart.set_title({'name' : sheet_chart_config['title']})
+                worksheet.insert_chart(1, data.shape[1] + 1, main_chart)
+                logger.info(f"Graphique créé avec pour la feuille {name}")
 
-                    for col_form in COLONNE_FORMATER_COMPLET.values():
-                        colone_name = col_form['colonne']
-                        seuil_key = col_form['seuil_key']
-                        if colone_name in data.columns:
-                            discount_column = data.columns.get_loc(colone_name)
-                            seuil = config.EXCEL_FORMATTING[seuil_key]
 
-                            worksheet.conditional_format(1, discount_column, len(data), discount_column, {
-                                'type' : 'cell',
-                                'criteria' : '<=',
-                                'value' : seuil['red_value'],
-                                'format' : red_format
-                            })
 
-                            worksheet.conditional_format(1, discount_column, len(data), discount_column, {
-                                'type' : 'cell',
-                                'criteria' : '>',
-                                'value' : seuil['green_value'],
-                                'format' : green_format
-                            })
+            
 
-                            worksheet.conditional_format(1, discount_column, len(data), discount_column, {
-                                'type' : 'cell',
-                                'criteria' : 'between',
-                                'minimum' : seuil['min_orange'],
-                                'maximum' : seuil['max_orange'],
-                                'format' : orange_format
-                            })
 
-                analysis_column = ['Données Par Restaurant', 'Données Par Plats', 'Données Par Catégories']
-                if name in analysis_column:
-                    logger.info(f"Application de la mise en forme conditionnelle sur la feuille {name}")
 
-                    for col_form in COLONNE_FORMATER_ANALYSIS.values():
-                        colone_name = col_form['colonne']
-                        seuil_key = col_form['seuil_key']
-                        if colone_name in data.columns:
-                            discount_column = data.columns.get_loc(colone_name)
-                            seuil = config.EXCEL_FORMATTING[seuil_key]
 
-                            worksheet.conditional_format(1, discount_column, len(data), discount_column, {
-                                'type' : 'cell',
-                                'criteria' : '<=',
-                                'value' : seuil['red_value'],
-                                'format' : red_format
-                            })
 
-                            worksheet.conditional_format(1, discount_column, len(data), discount_column, {
-                                'type' : 'cell',
-                                'criteria' : '>',
-                                'value' : seuil['green_value'],
-                                'format' : green_format
-                            })
 
-                            worksheet.conditional_format(1, discount_column, len(data), discount_column, {
-                                'type' : 'cell',
-                                'criteria' : 'between',
-                                'minimum' : seuil['min_orange'],
-                                'maximum' : seuil['max_orange'],
-                                'format' : orange_format
-                            })
-                            
+
+
+
+
+
+
+
+
+
+
+                

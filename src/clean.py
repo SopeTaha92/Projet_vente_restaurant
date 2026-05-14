@@ -28,7 +28,7 @@ def cleaning_data(df_brute : pd.DataFrame, file : str = CLEAN_DATA_FILE) -> pd.D
         errors='coerce' # ← "Ne plante pas si échec met Nat
     ).dt.date#.dt.strftime("%d-%m-%Y")#Pour changer le format d'affichage de la date par defaut sur python yyyy-mm-dd 
 
-    df_resto['order_time'] = pd.to_datetime(df_resto['order_time'], errors='coerce').dt.time
+    df_resto['order_time'] = pd.to_datetime(df_resto['order_time'], format='mixed', errors='coerce').dt.time
 
     df_resto['customer_name'] = df_resto['customer_name'].str.title().fillna('Inconnue')
 
@@ -36,31 +36,37 @@ def cleaning_data(df_brute : pd.DataFrame, file : str = CLEAN_DATA_FILE) -> pd.D
 
     df_resto['category'] = df_resto['category'].str.title().fillna('Inconnue')
 
-    df_resto['quantity'] = df_resto['quantity'].fillna(1).astype(int)
+    df_resto['quantity'] = pd.to_numeric(df_resto['quantity'], errors='coerce', downcast='integer').fillna(1).astype(int) 
 
     df_resto['unit_price'] = (
-        df_resto['unit_price']
-        .str.replace("€", "", regex=False)
-        .str.replace(" ", "", regex=False)
-        .replace("", "0", regex=False)
-        .astype(float)
-        .round(2)
+        pd.to_numeric(
+            df_resto['unit_price']
+            .astype(str)
+            .str.replace("€", "", regex=False)
+            .str.replace(" ", "", regex=False)
+            .replace("", "0", regex=False),
+            errors='coerce'
+            ).fillna(0).round(2)
     )
 
-    df_resto['rating'] = df_resto['rating'].astype(int).fillna(0)
+    df_resto['rating'] = pd.to_numeric(df_resto['rating'], errors='coerce').fillna(0).astype(int)
 
     df_resto['discount'] = (
-        df_resto['discount']
-        .str.replace("%", "", regex=False)
-        .str.replace(" ", "", regex=False)
-        .replace("", "0", regex=False)
-        .astype(int)
+        pd.to_numeric(
+            df_resto['discount']
+            .astype(str)
+            .str.replace("%", "", regex=False)
+            .str.replace(" ", "", regex=False)
+            .replace("", "0", regex=False),
+            errors='coerce',
+            downcast='integer'
+        ).fillna(0).astype(int)
     ) 
 
 
     logger.info('Néttoyage des données brutes éffectue avec succée')
 
-    df_resto.to_csv(file, index=False)
+    df_resto.head(10).to_csv(file, index=False)
     logger.info(f'Données néttoyés sont sauvegardés dans {file.name}')
     return df_resto
 

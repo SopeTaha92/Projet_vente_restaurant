@@ -1,7 +1,6 @@
 
 
 
-data/processed/*.csv
 output/*.xlsx
 logs/*.log
 venv/

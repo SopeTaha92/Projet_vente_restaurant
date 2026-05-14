@@ -17,10 +17,7 @@ def add_features(df_nettoye : pd.DataFrame) -> pd.DataFrame:
 
 
     df_nettoye['service_type'] = df_nettoye['order_time'].apply(lambda x : 'Soir' if x.hour >= 19 else 'Dejeuner')
-    """df_nettoye['order_datetime'] = pd.to_datetime(
-        df_nettoye['order_date'].astype(str) +' ' +  df_nettoye['order_time'].astype(str),
-        errors='coerce'
-    )"""
+
 
     #df_nettoye = df_nettoye.drop(['order_date', 'order_time'], axis=1)
     logger.info('Ajout des nouvelles colonnes éffectue avec succée')
