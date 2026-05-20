@@ -9,11 +9,12 @@ from config import CLEAN_DATA_FILE
 def cleaning_data(df_brute : pd.DataFrame, file : str = CLEAN_DATA_FILE) -> pd.DataFrame:
     """Cette fonction se charge du néttoyage des données brutes"""
     logger.info('Début du néttoyage des données brutes')
+    logger.info(f"Lignes brutes {len(df_brute)}")
     df_resto = df_brute.copy()
     logger.info('Copie des données brutes éffectué')
 
     df_resto = df_resto.drop_duplicates(keep='first')
-    logger.info('Suppréssion des potentiels doublons')
+    logger.info(f'Suppréssion des doublons soit : {len(df_brute) - len(df_resto)} lignes')
 
     df_resto['restaurant'] = (
         df_resto['restaurant']
@@ -42,9 +43,8 @@ def cleaning_data(df_brute : pd.DataFrame, file : str = CLEAN_DATA_FILE) -> pd.D
         pd.to_numeric(
             df_resto['unit_price']
             .astype(str)
-            .str.replace("€", "", regex=False)
-            .str.replace(" ", "", regex=False)
-            .replace("", "0", regex=False),
+            .str.extract(r"(\d+[\,.]?\d*)")[0]
+            .str.replace(",", ".", regex=False),
             errors='coerce'
             ).fillna(0).round(2)
     )
@@ -55,44 +55,20 @@ def cleaning_data(df_brute : pd.DataFrame, file : str = CLEAN_DATA_FILE) -> pd.D
         pd.to_numeric(
             df_resto['discount']
             .astype(str)
-            .str.replace("%", "", regex=False)
-            .str.replace(" ", "", regex=False)
-            .replace("", "0", regex=False),
+            .str.extract(r"(\d+)")[0],
             errors='coerce',
             downcast='integer'
         ).fillna(0).astype(int)
     ) 
 
+    df_resto['payment_method'] = df_resto['payment_method'].str.upper().fillna('Inconnue')
+
 
     logger.info('Néttoyage des données brutes éffectue avec succée')
+    logger.info(f"Lignes néttoyées {len(df_resto)}")
 
     df_resto.head(10).to_csv(file, index=False)
-    logger.info(f'Données néttoyés sont sauvegardés dans {file.name}')
+    logger.info(f"Échantillon de {len(df_resto.head(10))} lignes sauvegardé dans {file}")
+    logger.info(f"Données nettoyées prêtes pour le pipeline : {len(df_resto)} lignes")
     return df_resto
 
-
-"""
-
-
-print()
-print(f"🧹 NETTOYAGE COMPLEXE\n{df_nettoye}")
-
-df_restaurant['rating'] = df_restaurant['rating'].astype(str) + '/5'
-df_restaurant['total_amount'] = df_restaurant['total_amount'].astype(str) + ' €'
-
-print()
-print(f"🧹 Donnée par Restaurant\n{df_restaurant}")
-
-df_plats['unit_price'] = df_plats['unit_price'].astype(str) + ' €'
-df_plats['total_amount'] = df_plats['total_amount'].astype(str) + ' €'
-
-print()
-print(f"🧹 Donnée par Plats\n{df_plats}")
-
-df_category['unit_price'] = df_category['unit_price'].astype(str) + ' €'
-df_category['Impact_CA_%'] = df_category['Impact_CA_%'].astype(str) + ' %'
-
-print()
-print(f"🧹 Donnée par Catégories\n{df_category}")
-
-"""

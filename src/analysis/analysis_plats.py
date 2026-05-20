@@ -25,7 +25,9 @@ def analysis_by_plat(df_nettoye : pd.DataFrame):
         .reset_index() 
         )
 
-    df_plats['total_amount'] = round((df_plats['unit_price'] * df_plats['quantity']), 2).astype(float)
+    df_plats['total_price'] = round((df_plats['unit_price'] * df_plats['quantity']), 2).astype(float)
+    discount_amount = round((df_plats['total_price']*df_plats['discount'] / 100), 2).astype(float)
+    df_plats['total_amount'] = round(df_plats['total_price'] - discount_amount, 2).astype(float)
 
     logger.info("Analyse par Plat éffectué avec succée")
     return df_plats

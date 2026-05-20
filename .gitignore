@@ -1,9 +1,10 @@
 
 
 
-output/*.xlsx
-logs/*.log
+Output/*.xlsx
+Logs/*.log
 venv/
 .env
 *.pyc
 __pycache__/
+power_bi/*.pbix

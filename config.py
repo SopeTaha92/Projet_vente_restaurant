@@ -16,6 +16,7 @@ DB_CONFIG = {
 }
 
 TABLE = env['DB_TABLE']
+TABLE_CLEAN = env['DB_TABLE_COMPLET'] 
 
 TODAY = datetime.now().strftime('%d-%m-%Y_%H-%M')
 MAX_RETRIES = 3
@@ -92,9 +93,9 @@ EXCEL_CHARTS = {
                 'border' : {'color' : "#E1E4EB", 'width' : 1.5},
                 'data_labels' : {
                     'value' : True,
-                    'num_format' : '#,##0.00 €',
-                    'position' : 'outside_end',
-                    'font' : {'bold' : True}
+                    'num_format' : '#,##0.00" €"',
+                    'position' : 'outside_end'
+                    #'font' : {'bold' : True}
                 }
             },
             {
@@ -103,15 +104,10 @@ EXCEL_CHARTS = {
                 'type': 'line',
                 'y2_axis': True,
                 'line_color': 'red',
-                'data_labels' : {
-                    'value' : True,
-                    'num_format' : '0',
-                    'position' : 'above',
-                    'font' : {'bold' : True}
-                },
+                
                 'marker': {
                     'type': 'circle', 
-                    'size': 5, 
+                    'size': 3, 
                     'fill': {'color': 'white'}, 
                     'border': {'color': 'red'}
                     }
@@ -148,9 +144,9 @@ EXCEL_CHARTS = {
                 'border' : {'color' : "#E1E4EB", 'width' : 1.5},
                 'data_labels' : {
                     'value' : True,
-                    'num_format' : '#,##0.00 €',
-                    'position' : 'outside_end',
-                    'font' : {'bold' : True}
+                    'num_format' : '#,##0.00" €"',
+                    'position' : 'outside_end'
+                    #'font' : {'bold' : True}
                 }
             },
             {
@@ -159,12 +155,7 @@ EXCEL_CHARTS = {
                 'type': 'line',
                 'y2_axis': True,
                 'line_color': 'red',
-                'data_labels' : {
-                    'value' : True,
-                    'num_format' : '0 %',
-                    'position' : 'above',
-                    'font' : {'bold' : True}
-                },
+
                 'marker': {
                     'type': 'circle', 
                     'size': 5, 
@@ -175,3 +166,22 @@ EXCEL_CHARTS = {
         ]
     }
 }
+
+
+
+"""
+'data_labels' : {
+                    'value' : True,
+                    'num_format' : '0',
+                    'position' : 'above',
+                    'font' : {'bold' : True}
+                },
+                
+                
+                
+                'data_labels' : {
+                    'value' : True,
+                    'num_format' : '0.0" %"',
+                    'position' : 'above',
+                    'font' : {'bold' : True}
+                },"""
