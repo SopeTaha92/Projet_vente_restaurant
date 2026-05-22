@@ -80,6 +80,7 @@ Structuration_projet_vente-restaurant/
 ├── .env                            # Credentials (non versionné)
 ├── .env.exemple                    # Template credentials
 └── .gitignore
+└── .gitattributes              # Gestion des fins de ligne et fichiers binaires
 ```
 
 ---
@@ -96,6 +97,7 @@ Toute la configuration du projet est centralisée dans `config.py` :
 - **`EXCLUDED_SHEETS`** — feuilles exclues du formatage automatique
 - **`TIMEOUT_SMTP = 30`** — timeout de connexion SMTP pour éviter tout blocage
 - **`FILE_PATH_REPORT`** — chemin vers le rapport PDF joint automatiquement à l'email
+- **`.gitattributes`** — force LF sur les .py, CRLF sur les .bat, et marque les fichiers binaires (pdf, xlsx, db) comme intacts pour Git
 
 ```python
 # Exemple — architecture config-driven
