@@ -18,6 +18,12 @@ DB_CONFIG = {
 TABLE = env['DB_TABLE']
 TABLE_CLEAN = env['DB_TABLE_COMPLET'] 
 
+SMTP_SERVER = env['SERVER']
+SMTP_PORT = int(env['PORT'])
+EXPEDITEUR = env['FROM']
+DESTINATAIRE = env['TO']
+MDP = env['PASSWORD']
+
 TODAY = datetime.now().strftime('%d-%m-%Y_%H-%M')
 MAX_RETRIES = 3
 DELAY = 1
@@ -39,6 +45,10 @@ DIR_EXCEL = Path('Output')
 DIR_EXCEL.mkdir(parents=True, exist_ok=True)
 EXCEL_FILE = DIR_EXCEL / f"vente_restaurant_{TODAY}.xlsx"
 
+TIMEOUT_SMTP = int(env['TIMEOUT'])
+
+FILE_PATH_REPORT = Path('reports') / 'rapport_analyse_vente_restaurant.pdf'
+
 
 EXCLUDED_SHEETS = ['Données Brutes']
 
@@ -46,10 +56,7 @@ COULEURS_EXCEL= {
     'vert': '#C6EFCE',
     'rouge': '#FFC7CE',
     'orange': '#FFEB9C',
-    'header': '#4472C4',  # Bleu professionnel pour RH
-    'expert': '#9BC2E6',   # Bleu clair
-    'senior': '#A9D08E',   # Vert
-    'junior': '#FFD966'    # Jaune
+    'header': '#4472C4'  # Bleu professionnel pour RH
 }
 
 EXCEL_FORMATTING = {

@@ -1,0 +1,13 @@
+
+
+
+# Forcer Git à garder les fichiers binaires intacts
+*.pdf binary
+*.xlsx binary
+*.xls binary
+*.db binary
+*.sqlite binary
+
+# Harmoniser automatiquement les fichiers de code en texte brut
+*.py text eol=lf
+*.bat text eol=crlf
